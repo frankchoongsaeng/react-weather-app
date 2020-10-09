@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Login from './Components/LoginForm';
+import History from './Components/History';
+import Weather from './Components/Weather';
 
 function App() {
+  const [weatherData, setWeatherData] = useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app columns" >
+
+      <div className="column main-section" style={{backgroundColor: "red"}}>
+        <Weather onDataReady={ () => setWeatherData({'weather': 'sunny'}) } />
+      </div>
+
+      <div style={{ backgroundColor: "blue" }}className="column left-section is-centered is-three-quarters-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-quarter-fullhd">
+        { 
+          loggedIn ? 
+          <History historyList={["one", "two", "three", "four"]}/> :
+          <Login onLogin={() => setLoggedIn(!loggedIn)}/>
+        }
+      </div>
+      
     </div>
   );
 }
