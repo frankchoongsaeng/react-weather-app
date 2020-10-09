@@ -27,7 +27,7 @@ function Login(props) {
                         </div>
                         <div className="media-content">
                             <p className="title is-4">Login</p>
-                            <p className="subtitle is-6">Login to store your search history</p>
+                            <p className="subtitle is-6">Login to store your search history</p> 
                         </div>
                         </div>
 
