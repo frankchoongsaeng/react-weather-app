@@ -2,34 +2,33 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'weather-icons/css/weather-icons.min.css'
 
-
-const weatherCodes = {
-    "113" : "sunny",
-    "116" : "partly cloudy",
-    "119" : "cloudy",
-    "122" : "overcast",
-    "143" : "mist",
-    "176" : "patchy rain possible",
-    "179" : "patchy snow possible",
-    "182" : "patchy sleet possible",
-    "185" : "patchy freezing drizzle possible",
-    "200" : "thundry outbreaks possible",
-    "227" : "blowing snow",
-    "230" : "blizzard",
-    "248" : "fog",
-    "260" : "freezing fog",
-    "263" : "patchy light drizzle",
-    "266" : "light drizzle",
-    "281" : "freezing drizzle",
-    "284" : "heavy freezing drizzle",
-    "293" : "patchy light rain",
-    "296" : "light rain",
-    "299" : "moderate rain at times",
-    "302" : "moderate rain",
-    "305" : "heavy rain at times",
-    "308" : "heavy rain",
-    "311" : "light freezing rain",
-}
+// const weatherCodes = {
+//     "113" : "sunny",
+//     "116" : "partly cloudy",
+//     "119" : "cloudy",
+//     "122" : "overcast",
+//     "143" : "mist",
+//     "176" : "patchy rain possible",
+//     "179" : "patchy snow possible",
+//     "182" : "patchy sleet possible",
+//     "185" : "patchy freezing drizzle possible",
+//     "200" : "thundry outbreaks possible",
+//     "227" : "blowing snow",
+//     "230" : "blizzard",
+//     "248" : "fog",
+//     "260" : "freezing fog",
+//     "263" : "patchy light drizzle",
+//     "266" : "light drizzle",
+//     "281" : "freezing drizzle",
+//     "284" : "heavy freezing drizzle",
+//     "293" : "patchy light rain",
+//     "296" : "light rain",
+//     "299" : "moderate rain at times",
+//     "302" : "moderate rain",
+//     "305" : "heavy rain at times",
+//     "308" : "heavy rain",
+//     "311" : "light freezing rain",
+// }
 
 
 const api_data = {
@@ -80,7 +79,6 @@ function Weather() {
         "311" : "wi-rain-wind",
     }
 
-    
     // make the api call
     useEffect( () => {
         setIsRequesting(true);
@@ -96,7 +94,6 @@ function Weather() {
             console.log(error);
         }).then( () => { 
             setIsRequesting(false);
-            
         });
     }, [location]);
 
@@ -106,7 +103,6 @@ function Weather() {
     }, [weatherData]);
 
     
-
     return (
         <div className="weather columns is-centered"  style={{backgroundColor: "green"}}>
             <div style={{backgroundColor: "pink"}} className="column is-three-fifths">
