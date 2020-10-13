@@ -6,6 +6,12 @@ html {
   overflow-y: auto;
 }
 
+body {
+  background-image: url("http://www.hdwallpaperspulse.com/wp-content/uploads/2017/03/28/cloudy-weather-natural-image.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .column {
   padding: 0px;
 }
@@ -26,6 +32,10 @@ html {
   margin-top: 120px;
 }
 
+.weather {
+  color: #222;
+}
+
 .weather.columns {
   margin-top: 120px;
 }
@@ -35,13 +45,14 @@ html {
 }
 
 .weather-info-top {
-  /* max-width: 500px; */
-  background-color: purple;
+  width: 95%;
   margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px 10px 0px 0px;
 }
 
 .weather-info-icon {
@@ -92,4 +103,97 @@ html {
   font-size: 16px;
   font-style: italic;
   margin-top: -5px
+}
+
+.history-list-container {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 10px; 
+  height: calc(100% - 20px);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.history-list-header{
+  padding: 10px;
+  padding-top: 30px;
+  background-color: azure;
+}
+
+.history-list-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  
+}
+
+.history-list-header .info {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.history-list-body {
+  display: flex !important;
+  flex: 1;
+  flex-direction: column !important;
+  overflow-y: auto;
+}
+
+.history-list-item {
+  display: flex !important;
+  justify-content: stretch;
+  align-items: center;
+  padding: 20px 10px;
+  margin-bottom: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ddd;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 5px 2px rgba(70, 70, 70, 0.2);
+}
+
+.history-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.history-list-item-time {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.history-list-item-time date {
+  font-size: 20px;
+  font-weight: 100;
+}
+
+.history-list-item-time location {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.history-list-item-icon {
+  display: inline-flex;
+  flex: 1;
+  justify-content: flex-end;
+  padding-right: 20px;
+  position: relative;
+  bottom: -5px;
+  font-size: 30px;
+}
+
+.history-list-item-temperature {
+  font-size: 30px;
+}
+
+.history-list-item-temperature::after {
+  content: "o";
+  font-size: 12px;
+  position: relative;
+  top: -20px;
+}
+
+.history-list-footer {
+  background-color: azure;
+  padding: 20px 10px;
 }

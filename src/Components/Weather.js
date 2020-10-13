@@ -2,56 +2,32 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'weather-icons/css/weather-icons.min.css'
 
-// const weatherCodes = {
-//     "113" : "sunny",
-//     "116" : "partly cloudy",
-//     "119" : "cloudy",
-//     "122" : "overcast",
-//     "143" : "mist",
-//     "176" : "patchy rain possible",
-//     "179" : "patchy snow possible",
-//     "182" : "patchy sleet possible",
-//     "185" : "patchy freezing drizzle possible",
-//     "200" : "thundry outbreaks possible",
-//     "227" : "blowing snow",
-//     "230" : "blizzard",
-//     "248" : "fog",
-//     "260" : "freezing fog",
-//     "263" : "patchy light drizzle",
-//     "266" : "light drizzle",
-//     "281" : "freezing drizzle",
-//     "284" : "heavy freezing drizzle",
-//     "293" : "patchy light rain",
-//     "296" : "light rain",
-//     "299" : "moderate rain at times",
-//     "302" : "moderate rain",
-//     "305" : "heavy rain at times",
-//     "308" : "heavy rain",
-//     "311" : "light freezing rain",
-// }
-
-
 const api_data = {
     "key" : "446c9f64ad97ba1cea060a973a2f1b8c",
     "url" : "http://api.weatherstack.com/current",
 };
 
+// Check if the an Hour is daytime or night time
 function checkIsTimeDay(str) {
-    let hr = parseInt(str.split(" ")[1].split(":")[0]);
-    console.log(hr);
-    console.log(hr >= 6 && hr <= 18);
+    let hr = parseInt(str.split(" ")[1].split(":")[0])
     return (hr >= 6 && hr <= 18);
 }
 
-function Weather() {
-    let [loc, setLoc] = useState("New York");
-    const [weatherData, setWeatherData] = useState({});
-    const [location, setLocation] = useState(loc);
+// get the users location 
+function getUserLocation(callback) {
+    navigator.geolocation.getCurrentPosition((pos) => callback(pos));
+}
+
+function Weather(props)  {
+
+    // declare my state variables
+    const [weatherDetails, setWeatherDetails] = useState({});
+    const [searchLocation, setSearchLocation] = useState(null); //location for requesting data
+    const [inputLocation, setInputLocation] = useState("");
     const [isRequesting, setIsRequesting] = useState(true);
-    const [isDay, setIsDay] = useState(false);
-    
-    // define the icons to be used
-    const weatherCodesImages = {
+    const [isDay, setIsDay] = useState(true);
+
+    const weatherCodeImages = {
         "113" : "wi-day-sunny",
         "116" : "wi-cloud",
         "119" : "wi-cloudy",
@@ -77,52 +53,109 @@ function Weather() {
         "305" : "wi-rain-mix",
         "308" : "wi-rain",
         "311" : "wi-rain-wind",
-    }
+        "314" : "wi-hail",
+        "317" : "wi-sleet",
+        "320" : "wi-sleet",
+        "323" : "wi-snowflake-cold",
+        "326" : "wi-snowflake-cold",
+        "329" : "wi-snow",
+        "332" : "wi-snow",
+        "335" : "wi-snow-wind",
+        "338" : "wi-snowflake-cold",
+        "350" : "wi-snowflake-cold",
+        "353" : "wi-raindrops",
+        "356" : "wi-raindrops",
+        "359" : "wi-rain",
+        "362" : "wi-showers",
+        "365" : "wi-rain",
+        "368" : "wi-showers",
+        "371" : "wi-snowflake-cold",
+        "374" : "wi-snowflake-cold",
+        "377" : "wi-snowflake-cold",
+        "386" : "wi-storm-showers",
+        "389" : "wi-thunderstorm",
+        "392" : isDay ? "wi-day-snow-thunderstorm" : "wi-night-alt-snow-thunderstorm",
+        "395" : isDay ? "wi-day-snow-thunderstorm" : "wi-night-alt-snow-thunderstorm",
+    };
 
-    // make the api call
-    useEffect( () => {
+    // make api request to the api
+    function getLocationWeather(searchLocation) {
         setIsRequesting(true);
         axios.get(api_data.url, {
             params: {
                 access_key: api_data.key,
-                query: location
+                query: searchLocation,
             }
-        }).then( (response) => {
-            setWeatherData(response.data);
-            setIsDay(checkIsTimeDay(response.data.location.localtime));
-        }).catch( (error) => {
-            console.log(error);
-        }).then( () => { 
+        }).then( (res) => {
+            console.log(res.data);
+            setWeatherDetails(res.data);
+            setInputLocation(res.data.location.name);
             setIsRequesting(false);
+            returnWeatherDetails(res.data);
+        }).catch( (err) => {
+            console.log(err)
+        }).then( () => {
+
         });
-    }, [location]);
+    }
 
-    // log the response data to the console when it has been recieved
+    function returnWeatherDetails(_weatherdata) {
+        if(_weatherdata) {
+            props.onDataReady(_weatherdata);
+        }
+    }
+
+    // handle each search event
+    function handleSearchEvent(e) {
+        e.preventDefault();
+        if(inputLocation === searchLocation) {
+            alert("can't search Location");
+        } else {
+            console.log("search-location: " + searchLocation);
+            console.log("input-location: " + inputLocation);
+            setSearchLocation(inputLocation)
+        }
+    }
+
+    // get the users current location when the home component is loaded
+    // after getting the users location, get the weather details for that location
     useEffect( () => {
-        console.log(weatherData);
-    }, [weatherData]);
+        getUserLocation((userPosition) => {
+            setSearchLocation(userPosition.coords.latitude + "," + userPosition.coords.longitude);
+        });
+    }, []);
 
-    
+
+    // call the api weather data whenever the search location has changed
+    useEffect( () => {
+        // make sure the search Location variable is valid before making an api call
+        if(searchLocation) {
+            getLocationWeather(searchLocation);
+        } else {
+            console.log(searchLocation);
+        }
+    }, [searchLocation]);
+
     return (
-        <div className="weather columns is-centered"  style={{backgroundColor: "green"}}>
-            <div style={{backgroundColor: "pink"}} className="column is-three-fifths">
+        <div className="weather columns is-centered" >
+            <div className="column is-three-fifths">
                 <div className="">
                     <div className="weather-info-top">
-                        <i className={"weather-info-icon wi " + (isRequesting ? "" : weatherCodesImages[weatherData.current.weather_code])}></i>
-                        <span className="weather-info-temperature">{isRequesting ? "-" : weatherData.current.temperature}</span>
+                        <i className={"weather-info-icon wi " + ( isRequesting ? "" : weatherCodeImages[weatherDetails.current.weather_code]) } ></i>
+                        <span className="weather-info-temperature">{ isRequesting ? "NA" : weatherDetails.current.temperature }</span>
                         <span className="weather-info-moreinfo">
-                            <span className="weather-info-search-location">{ isRequesting ? "-" : weatherData.location.name }</span>
-                            <span className="weather-info-search-time">{isRequesting ? "-" : weatherData.location.localtime}</span>
+                            <span className="weather-info-search-location">{ isRequesting ? "NA" : weatherDetails.location.name }</span>
+                            <span className="weather-info-search-time">{ isRequesting ? "NA" : weatherDetails.location.localtime}</span>
                         </span>
                     </div>
 
                     <form className="form">
                         <div className="field has-addons">
                             <div className="control is-expanded">
-                                <input className="input weather-search-input" value={loc} onChange={ (event) => setLoc(event.target.value) } type="text" placeholder="enter location" />
+                                <input className="input weather-search-input" value={inputLocation} onChange={(e) => setInputLocation(e.target.value)} type="text" placeholder="enter location" />
                             </div>
                             <div className="control">
-                                <a className="button is-success" onClick={ () => setLocation(loc) }> {isRequesting ? "loading" : "Search"} </a>
+                                <button className={ "button is-success " + (isRequesting ? "is-loading" : "" ) } onClick={handleSearchEvent}>Search</button>
                             </div>
                         </div>
                     </form>
